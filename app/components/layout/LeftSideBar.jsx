@@ -1,12 +1,32 @@
+"use client"
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Menu from './Menu'
-import { SignOutButton, SignedIn, UserButton } from '@clerk/nextjs'
+import { SignOutButton, SignedIn, UserButton, useUser } from '@clerk/nextjs'
+import { dark } from '@clerk/themes'
 import { Logout } from '@mui/icons-material'
+import Loader from '../Loader'
 
 const LeftSideBar = () => {
-  return (
+  const {user,isLoaded} = useUser()
+
+  const [loading,setLoading] = useState(true)
+  const [userData,setUserData] = useState({})
+
+  const getUser = async()=>{
+    const response = await fetch(`/api/user/${user.id}`)
+    const data = await response.json()
+    setUserData(data)
+    setLoading(false)
+  }
+
+  useEffect(()=>{
+    getUser()
+  },[user])
+  
+  
+  return loading || !isLoaded ? <Loader/> :(
     <div className='h-screen left-0 top-0 sticky overflow-auto px-10 py-6 flex flex-col gap-6 max-md:hidden custom-scrollbar'>
         <Link href='/'>
             <Image src='/assets/logo.png' alt='logo' width={200} height={200} className='rounded-full'/>
@@ -40,7 +60,7 @@ const LeftSideBar = () => {
             <hr />
 
             <div className='flex gap-4 items-center'>
-              <UserButton/>
+              <UserButton  appearance={{baseTheme : dark}}/>
               <p className='text-light-1 text-body-bold'>Manage Profile</p>
             </div>
 
