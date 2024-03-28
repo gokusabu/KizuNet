@@ -2,15 +2,21 @@ import { AddPhotoAlternateOutlined } from "@mui/icons-material";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 
-const Posting = ({ post, handlePublish }) => {
+const Posting = ({ post }) => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm({ defaultValues: posts });
+  } = useForm({ defaultValues: post });
+
+  const handlePublish = (data)=>{
+    console.log(data)
+  }
+
+
   return (
-    <form className="flex flex-col gap-7 pb-24">
+    <form onSubmit={handleSubmit(handlePublish)} className="flex flex-col gap-7 pb-24">
       <label
         htmlFor="photo"
         className="flex gap-4 items-center text-light-1 cursor-pointer"
@@ -26,7 +32,7 @@ const Posting = ({ post, handlePublish }) => {
             />
           ) : (
             <Image
-              src={URL.createObjectURL(watch("postPhoto"))}
+              src={URL.createObjectURL(watch("postPhoto")[0])}
               alt="post"
               width={250}
               height={200}
