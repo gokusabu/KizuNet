@@ -24,7 +24,7 @@ const CreatePost = () => {
   }, [user]);
 
   const postData = {
-    cretorId: userData?._id,
+    creatorId: userData?._id,
     caption: "",
     tag: "",
     postPhoto: null,

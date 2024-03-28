@@ -1,5 +1,7 @@
 import { AddPhotoAlternateOutlined } from "@mui/icons-material";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Router } from "next/router";
 import { useForm } from "react-hook-form";
 
 const Posting = ({ post }) => {
@@ -10,8 +12,27 @@ const Posting = ({ post }) => {
     formState: { errors },
   } = useForm({ defaultValues: post });
 
-  const handlePublish = (data)=>{
-    console.log(data)
+  const router = useRouter()
+  const handlePublish = async(data)=>{
+
+    try{
+      const postForm= new FormData()
+
+      postForm.append("creatorId",data.creatorId)
+      postForm.append("caption",data.caption)
+      postForm.append("tag",data.tag)
+      postForm.append("postPhoto",data.postPhoto[0])
+
+      const response = await fetch("/api/post/new",{method:'POST',body:postForm})
+
+      if(response.ok){
+        router.push(`/profile/${data.creatorId}`)
+      }
+
+    }catch(err){
+      console.log("error uploading post",err.message)
+    }
+    
   }
 
 

@@ -39,13 +39,13 @@ export const POST = async(req)=>{
         //update users post array
 
         await User.findByIdAndUpdate(
-            data.get(creatorId),
+            data.get("creatorId"),
             { $push: { posts:newPost._id } },
             {new: true, useFindAndModify:false}
         )
 
         return new Response(JSON.stringify(newPost),{ status: 200})
     }catch(err){
-        return new Response("error creating post",{ status: 200})
+        return new Response("error creating post",{ status: 500})
     }
 }
