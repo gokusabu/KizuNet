@@ -1,10 +1,11 @@
+"use client"
 import { AddPhotoAlternateOutlined } from "@mui/icons-material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Router } from "next/router";
 import { useForm } from "react-hook-form";
 
-const Posting = ({ post }) => {
+const Posting = ({ post , apiEndpoint }) => {
   const {
     register,
     handleSubmit,
@@ -12,32 +13,39 @@ const Posting = ({ post }) => {
     formState: { errors },
   } = useForm({ defaultValues: post });
 
-  const router = useRouter()
-  const handlePublish = async(data)=>{
+  const router = useRouter();
+  const handlePublish = async (data) => {
+    try {
+      const postForm = new FormData();
 
-    try{
-      const postForm= new FormData()
+      postForm.append("creatorId", data.creatorId);
+      postForm.append("caption", data.caption);
+      postForm.append("tag", data.tag);
 
-      postForm.append("creatorId",data.creatorId)
-      postForm.append("caption",data.caption)
-      postForm.append("tag",data.tag)
-      postForm.append("postPhoto",data.postPhoto[0])
-
-      const response = await fetch("/api/post/new",{method:'POST',body:postForm})
-
-      if(response.ok){
-        router.push(`/profile/${data.creatorId}`)
+      if (typeof data.postPhoto !== "string") {
+        postForm.append("postPhoto", data.postPhoto[0]);
+      } else {
+        postForm.append("postPhoto", data.postPhoto);
       }
 
-    }catch(err){
-      console.log("error uploading post",err.message)
-    }
-    
-  }
+      const response = await fetch(apiEndpoint, {
+        method: "POST",
+        body: postForm,
+      });
 
+      if (response.ok) {
+        router.push(`/profile/${data.creatorId}`);
+      }
+    } catch (err) {
+      console.log("error uploading post", err.message);
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit(handlePublish)} className="flex flex-col gap-7 pb-24">
+    <form
+      onSubmit={handleSubmit(handlePublish)}
+      className="flex flex-col gap-7 pb-24"
+    >
       <label
         htmlFor="photo"
         className="flex gap-4 items-center text-light-1 cursor-pointer"
@@ -119,19 +127,22 @@ const Posting = ({ post }) => {
         </label>
         <input
           {...register("tag", {
-            required: "tag is Required"
+            required: "tag is Required",
           })}
           type="text"
           placeholder="#tag"
           className="w-full input"
           id="tag"
         ></input>
-        {errors.tag && (
-          <p className="text-red-500">{errors.tag.message}</p>
-        )}
+        {errors.tag && <p className="text-red-500">{errors.tag.message}</p>}
       </div>
 
-      <button type="submit" className="py-2.5 rounded-lg mt-10 bg-purple-1 hover:bg-pink-1 text-light-1"  >Post</button>
+      <button
+        type="submit"
+        className="py-2.5 rounded-lg mt-10 bg-purple-1 hover:bg-pink-1 text-light-1"
+      >
+        Post
+      </button>
     </form>
   );
 };
