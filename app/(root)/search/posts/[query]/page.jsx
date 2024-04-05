@@ -41,7 +41,7 @@ const SearchPost = () => {
             <Link className="tab bg-purple-1" href={`/search/posts/${query}`}>
                 Posts
             </Link>
-            <Link className="tab bg-purple-1" href={`/search/people/${query}`}>
+            <Link className="tab bg-dark-2" href={`/search/poeple/${query}`}>
                 People
             </Link>
         </div>
