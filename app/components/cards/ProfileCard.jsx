@@ -4,8 +4,10 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Loader from "../Loader";
 import { PersonAddAlt, PersonRemove } from "@mui/icons-material";
+import { tabs } from "@constants";
+import Link from'next/link';
 
-const ProfileCard = ({ userData }) => {
+const ProfileCard = ({ userData , activeTab }) => {
   const { user, isLoaded } = useUser();
 
   const [loading, setLoading] = useState(true);
@@ -82,6 +84,16 @@ const ProfileCard = ({ userData }) => {
             ))}
         </div>
       </div>
+
+        <div className="flex gap-6">
+          {tabs.map((tab)=>(
+            <Link className={`tab ${activeTab === tab.name ? "bg-purple-1" : "bg-dark-2"}`} href={`/profile/${userData._id}/${tab.link}`}>
+              {tab.name}
+            </Link>
+          ))}
+        </div>
+
+
     </div>
   );
 };

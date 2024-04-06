@@ -1,8 +1,10 @@
 "use client"
 import Loader from '@app/components/Loader'
+import PostCard from '@app/components/cards/PostCard'
 import ProfileCard from '@app/components/cards/ProfileCard'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { useUser } from "@clerk/nextjs";
 
 const Profile = () => {
 
@@ -22,8 +24,19 @@ const Profile = () => {
     getUser()
   },[id])
 
-  return loading ? <Loader/> : (
-    <ProfileCard userData={userData} />
+  const {user , isLoaded} = useUser()
+
+  return loading || !isLoaded ? <Loader/> : (
+    <div className='flex flex-col gap-9'>
+      <ProfileCard userData={userData} activeTab='Posts' />
+      <div className='flex flex-col gap-9'>
+        {userData?.posts?.map((post)=>(
+          <PostCard key={post._id} post={post} creator={post.creator} loggedInUser={user}/>
+        ))}
+
+      </div>
+    </div>
+    
   )
 }
 
