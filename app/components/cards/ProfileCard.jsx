@@ -34,8 +34,21 @@ const ProfileCard = ({ userData , activeTab }) => {
   }, [user]);
 
   const isFollwing = userInfo?.following?.find(
-    (item) => item.id === userData._id
+    (item) => item._id === userData._id
   );
+
+  const handleFollow = async()=>{
+      const response = await fetch(`/api/user/${user.id}/follow/${userData._id}`,{
+        method:'POST',
+        headers:{
+          "Content-Type":"application/json"
+        },
+      })
+      const data = await response.json()
+      setUserInfo(data)
+  }
+
+
 
   return loading || !isLoaded ? (
     <Loader />
@@ -55,7 +68,7 @@ const ProfileCard = ({ userData , activeTab }) => {
               {userData.firstName} {userData.lastName}
             </p>
             <p className="text-light-3 text-subtle-semibold">
-              {userData.username}
+              @{userData.username}
             </p>
             <div className="flex gap-7 text-small-bold max-sm:gap-4">
               <div className="flex max-sm:flex-col gap-2 items-center max-sm:gap-0.5">
@@ -75,11 +88,13 @@ const ProfileCard = ({ userData , activeTab }) => {
           {user.id !== userData.clerkId &&
             (isFollwing ? (
               <PersonRemove
-                sx={{ color: "#7857ff", cuesor: "pointer", fontSize: "40px" }}
+                sx={{ color: "#7857ff", cursor: "pointer", fontSize: "40px" }}
+                onClick={()=>handleFollow()}
               />
             ) : (
               <PersonAddAlt
-                sx={{ color: "#7857ff", cuesor: "pointer", fontSize: "40px" }}
+                sx={{ color: "#7857ff", cursor: "pointer", fontSize: "40px" }}
+                onClick={()=>handleFollow()}
               />
             ))}
         </div>
