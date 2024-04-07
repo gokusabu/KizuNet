@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import Loader from '../Loader'
 import { PersonAddAlt, PersonRemove } from '@mui/icons-material'
 
-const UserCard = ({userData}) => {
+const UserCard = ({userData , update}) => {
     const {user , isLoaded} = useUser()
 
     const [loading,setLoading] = useState(true)
@@ -31,7 +31,19 @@ const UserCard = ({userData}) => {
         }
     },[user])
 
-    const isFollwing = userInfo?.following?.find((item)=> item.id === userData._id)
+    const isFollwing = userInfo?.following?.find((item)=> item._id === userData._id)
+
+    const handleFollow = async()=>{
+        const response = await fetch(`/api/user/${user.id}/follow/${userData._id}`,{
+          method:'POST',
+          headers:{
+            "Content-Type":"application/json"
+          },
+        })
+        const data = await response.json()
+        setUserInfo(data)
+        update()
+    }
 
   return loading || !isLoaded ? <Loader/> : (
     <div className='flex justify-between items-center'>
@@ -46,10 +58,10 @@ const UserCard = ({userData}) => {
         {user.id !== userData.clerkId && (
 
             isFollwing ? (
-                <PersonRemove sx={{color:'#7857ff',cuesor:'pointer'}}/>
+                <PersonRemove sx={{color:'#7857ff',cursor:'pointer'}} onClick={()=>handleFollow()}/>
 
             ):(
-                <PersonAddAlt sx={{color:'#7857ff',cuesor:'pointer'}}/>
+                <PersonAddAlt sx={{color:'#7857ff',cursor:'pointer'}} onClick={()=>handleFollow()}/>
             )           
         )}
 

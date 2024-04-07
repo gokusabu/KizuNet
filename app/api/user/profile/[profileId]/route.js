@@ -6,17 +6,17 @@ export const GET = async(req,{params}) =>{
     try{
         await connectToDB()
         const user = await User.findById(params.profileId).populate({
-            path:"posts likedPosts savedPosts",
+            path:"posts savedPosts likedPosts",
             model:Post,
             populate:{
                 path:"creator",
                 model:User
-            }
+            },
         }).populate({
             path:"followers following",
-            model:Post,
+            model:User,
             populate:{
-                path:"posts likedPosts savedPosts",
+                path:"posts savedPosts likedPosts",
                 model:Post
             }
         }).exec()

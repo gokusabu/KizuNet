@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useUser } from "@clerk/nextjs";
 
-const Profile = () => {
+const ProfilePosts = () => {
 
   const { id }= useParams()
 
@@ -40,4 +40,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default ProfilePosts

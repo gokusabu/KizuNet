@@ -46,6 +46,7 @@ const ProfileCard = ({ userData , activeTab }) => {
       })
       const data = await response.json()
       setUserInfo(data)
+      
   }
 
 
@@ -72,15 +73,15 @@ const ProfileCard = ({ userData , activeTab }) => {
             </p>
             <div className="flex gap-7 text-small-bold max-sm:gap-4">
               <div className="flex max-sm:flex-col gap-2 items-center max-sm:gap-0.5">
-                <p className="text-purple-1">{userData.posts.length}</p>
+                <p className="text-purple-1">{userInfo.posts.length}</p>
                 <p className="text-light-1">Posts</p>
               </div>
               <div className="flex max-sm:flex-col gap-2 items-center max-sm:gap-0.5">
-                <p className="text-purple-1">{userData.followers.length}</p>
+                <p className="text-purple-1">{userInfo.followers.length}</p>
                 <p className="text-light-1">Followers</p>
               </div>
               <div className="flex max-sm:flex-col gap-2 items-center max-sm:gap-0.5">
-                <p className="text-purple-1">{userData.following.length}</p>
+                <p className="text-purple-1">{userInfo.following.length}</p>
                 <p className="text-light-1">Following</p>
               </div>
             </div>
