@@ -28,6 +28,7 @@ const PostCard = ({post , creator, loggedInUser , update}) => {
     })
     const data =await response.json()
     setUserData(data)
+    update()
   }
 
   const handleLike = async()=>{
