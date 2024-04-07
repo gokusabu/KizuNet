@@ -1,11 +1,49 @@
 import { Bookmark, BookmarkBorder, BorderColor, Favorite, FavoriteBorder } from "@mui/icons-material";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const PostCard = ({post , creator, loggedInUser}) => {
-  const [isLiked,setIsLiked] = useState(false)
-  const [isSaved,setIsSaved] = useState(false)
+const PostCard = ({post , creator, loggedInUser , update}) => {
+  const [userData,setUserData] = useState({})
+
+  const getUser = async()=>{
+    const response = await fetch(`api/user/${loggedInUser.id}`)
+    const data = await response.json()
+    setUserData(data)
+  }
+
+  useEffect(()=>{
+    getUser()
+  },[])
+
+  const isLiked = userData?.likedPosts?.find((item)=>item._id === post._id)
+  const isSaved = userData?.savedPosts?.find((item)=>item._id === post._id)
+
+  const handleSave = async()=>{
+    const response = await fetch(`api/user/${loggedInUser.id}/save/${post._id}`,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      }
+    })
+    const data =await response.json()
+    setUserData(data)
+  }
+
+  const handleLike = async()=>{
+    const response = await fetch(`api/user/${loggedInUser.id}/like/${post._id}`,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      }
+    })
+    const data =await response.json()
+    setUserData(data)
+    update()
+  }
+  
+
+
   return (
     <div className="w-full max-w-xl rounded-lg flex flex-col gap-4 bg-dark-1 p-5 max-sm:gap-2">
       <div className="flex justify-between">
@@ -44,17 +82,17 @@ const PostCard = ({post , creator, loggedInUser}) => {
       <div className="flex justify-between">
         <div className="flex gap-2 items center">
           {!isLiked ?(
-            <FavoriteBorder sx={{color:"white" , cursor:"pointer"}}/>
+            <FavoriteBorder sx={{color:"white" , cursor:"pointer"}} onClick = {()=>handleLike()}/>
           ):(
-            <Favorite sx={{color:"red" , cursor:"pointer"}}/>
+            <Favorite sx={{color:"red" , cursor:"pointer"}} onClick = {()=>handleLike()}/>
           )}
           <p className="text-light-1">{post.likes.length}</p>
         </div>
             {loggedInUser.id !== creator.clerkId &&(
               (isSaved ?(
-                <Bookmark sx={{color:"purple" , cursor:"pointer"}}/>
+                <Bookmark sx={{color:"purple" , cursor:"pointer"}} onClick = {()=>handleSave()}/>
               ):(
-                <BookmarkBorder sx={{color:"white" , cursor:"pointer"}}/>
+                <BookmarkBorder sx={{color:"white" , cursor:"pointer"}} onClick = {()=>handleSave()}/>
               ))
             )}
       </div>

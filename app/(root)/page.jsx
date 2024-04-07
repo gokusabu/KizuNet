@@ -31,6 +31,7 @@ const Home = () => {
         post={post}
         creator={post.creator}
         loggedInUser={user}
+        update={getFeedPost}
         />
       ))}
     </div>

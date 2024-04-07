@@ -46,6 +46,7 @@ const ProfileCard = ({ userData , activeTab }) => {
       })
       const data = await response.json()
       setUserInfo(data)
+      console.log(data)
       
   }
 
