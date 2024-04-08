@@ -21,7 +21,7 @@ const BottomBar = () => {
           >
             {link.icon}
             <p className="text-small-medium text-light-1 max-sm:hidden">
-              {link.label}
+              {link.label.split(/\s+/)[0]}
             </p>
           </Link>
         );

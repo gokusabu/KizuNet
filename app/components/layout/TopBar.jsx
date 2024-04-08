@@ -1,15 +1,39 @@
 "use client";
-import { SignOutButton, SignedIn } from "@clerk/nextjs";
-import { Add, Logout, Search } from "@mui/icons-material";
+import { SignOutButton, SignedIn ,UserButton , useUser} from "@clerk/nextjs";
+import { Add, Logout, Person, Search } from "@mui/icons-material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {dark} from '@clerk/themes'
+import Loader from "../Loader";
+
 
 const TopBar = () => {
   const router = useRouter();
-  const [search, setSearch] = useState("");
-  return (
+  const [search, setSearch] = useState("")
+
+  const {user ,isLoaded} = useUser()
+
+  const [loading,setLoading] = useState(true)
+
+  const [userData,setUserData] = useState({})
+
+  const getUser = async()=>{
+    const response = await fetch(`/api/user/${user.id}`)
+    const data = await response.json()
+    setUserData(data)
+    setLoading(false)
+  }
+
+  useEffect(()=>{
+    if(user){
+      getUser()
+    }
+  },[user])
+
+
+  return loading || !isLoaded ? <Loader/> : (
     <div className="flex justify-between items-center mt-6">
       <div className="relative">
         <input
@@ -33,24 +57,12 @@ const TopBar = () => {
         <p>Create Post</p>{" "}
       </button>
 
-      <div className="flex gap-3">
-        <SignedIn>
-          <SignOutButton>
-            <div className="flex items-center cursor-pointer md:hidden">
-              <Logout sx={{ color: "white", fontSize: "32px" }} />
-            </div>
-          </SignOutButton>
-        </SignedIn>
-
-        <Link href="/">
-          <Image
-            src="/assets/logo.png"
-            alt="profile pic"
-            width={50}
-            height={50}
-            className="rounded-full md:hidden"
-          />
+      <div className="flex gap-4 md:hidden">
+        <Link href={`/profile/${userData._id}/posts`}>
+          <Person sx={{fontSize:'35px' ,color:'white'}}/>
         </Link>
+
+        <UserButton appearence={{baseTheme : dark}}/>
       </div>
     </div>
   );
