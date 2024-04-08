@@ -62,3 +62,19 @@ export const POST = async (req, { params }) => {
       return new Response("Failed to update the post", { status: 500 });
     }
   };
+
+
+  export const DELETE = async(req,{ params })=>{
+
+    try{
+      await connectToDB()
+
+      await Post.findByIdAndDelete(params.id)
+
+      return new Response("Post deleted Successfully!!" , { status:200 })
+
+    }catch(err){
+      console.log(err)
+      return new Response("Error deleting Post" , { status:500 })
+    }
+  }

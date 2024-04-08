@@ -1,4 +1,4 @@
-import { Bookmark, BookmarkBorder, BorderColor, Favorite, FavoriteBorder } from "@mui/icons-material";
+import { Bookmark, BookmarkBorder, BorderColor, Delete, Favorite, FavoriteBorder } from "@mui/icons-material";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -40,6 +40,14 @@ const PostCard = ({post , creator, loggedInUser , update}) => {
     })
     const data =await response.json()
     setUserData(data)
+    update()
+  }
+
+  const handleDelete = async()=>{
+    await fetch(`/api/post/${post._id}`,{
+      method:'DELETE'
+    })
+
     update()
   }
   
@@ -95,6 +103,9 @@ const PostCard = ({post , creator, loggedInUser , update}) => {
               ):(
                 <BookmarkBorder sx={{color:"white" , cursor:"pointer"}} onClick = {()=>handleSave()}/>
               ))
+            )}
+            {loggedInUser.id === creator.clerkId &&(
+              <Delete sx={{color:"white" , cursor:"pointer"}} onClick={()=>handleDelete()}/>
             )}
       </div>
     </div>
