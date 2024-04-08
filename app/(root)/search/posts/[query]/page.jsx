@@ -46,7 +46,7 @@ const SearchPost = () => {
             </Link>
         </div>
         {searchedPost.map((post)=>(
-            <PostCard key={post._id} post={post} creator={post.creator} loggedInUser={user}/>
+            <PostCard key={post._id} post={post} creator={post.creator} loggedInUser={user} update={getSearchedPosts}/>
         ))}
 
     </div>

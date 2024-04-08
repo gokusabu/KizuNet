@@ -47,7 +47,7 @@ const SearchPeople = () => {
             </Link>
         </div>
         {searchedPeople.map((person)=>(
-            <UserCard key={person._id} userData={person} />
+            <UserCard key={person._id} userData={person} update={getSearchedPeople} />
         ))}
 
     </div>
